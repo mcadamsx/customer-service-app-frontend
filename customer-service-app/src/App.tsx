@@ -1,14 +1,14 @@
-
-import './App.css'
+import { Routes, Route } from 'react-router-dom';
+import Login from "./pages/auth/Login.tsx";
+import SignUp from "./pages/auth/SignUp.tsx";
 
 function App() {
-
-
-  return (
-    <>
-      <h1 className="text-center text-primary text-4xl">CUSTOMER SERVICE APP</h1>
-    </>
-  )
+    return (
+        <Routes>
+            <Route path="/" element={<Login />} />
+            <Route path="/sign-up-admin" element={<SignUp  />} />
+        </Routes>
+    );
 }
 
-export default App
+export default App;
