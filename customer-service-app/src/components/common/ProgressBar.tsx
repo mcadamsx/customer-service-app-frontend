@@ -1,17 +1,11 @@
 import React from 'react';
 
 interface ProgressBarProps {
-    currentStep: number; // 1, 2, or 3
+    currentStep: number;
 }
 
 const ProgressBar: React.FC<ProgressBarProps> = ({ currentStep }) => {
-    const stepProgress: Record<number, number> = {
-        1: 30,
-        2: 60,
-        3: 100,
-    };
-
-    const progressPercent = stepProgress[currentStep] || 0;
+    const progressPercent = Math.min(currentStep, 100);
 
     return (
         <div className="w-full mb-4 bg-purple-200 p-4 rounded-lg">
