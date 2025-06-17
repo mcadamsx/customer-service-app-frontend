@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
 import ProgressBar from "../../components/common/ProgressBar";
@@ -8,13 +8,14 @@ import StepTwo from "../../components/auth/SignUpForms/StepTwo.tsx";
 import StepThree from "../../components/auth/SignUpForms/StepThree.tsx";
 import LoginLeftPanel from "../../components/auth/LeftPanel.tsx";
 import AuthLayout from "../../layouts/AuthLayout.tsx";
+import Toast from "../../components/common/ToastMessage.tsx";
 
 const SignUp = () => {
     const [step, setStep] = useState(1);
     const [isStepValid, setIsStepValid] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
-    const [alertMessage, setAlertMessage] = useState("");
+    const [progress, setProgress] = useState(30);
 
     const [formData, setFormData] = useState({
         name: '',
@@ -28,48 +29,69 @@ const SignUp = () => {
         region: '',
     });
 
+    useEffect(() => {
+        if (step === 1) {
+            const { name, email, phone, password, confirm_password } = formData;
+            const totalFields = 5;
+            const filled = [name, email, phone, password, confirm_password].filter(Boolean).length;
+            const stepProgress = (filled / totalFields) * 30;
+            setProgress(stepProgress);
+        }
+
+        if (step === 2) {
+            const { address_1, address_2, country, region } = formData;
+            const totalFields = 4;
+            const filled = [address_1, address_2, country, region].filter(Boolean).length;
+            const stepProgress = 30 + (filled / totalFields) * 30;
+            setProgress(stepProgress);
+        }
+
+        if (step === 3 || isSubmitted) {
+            setProgress(100);
+        }
+    }, [formData, step, isSubmitted]);
+
+
     const next = () => {
         if (isStepValid) {
             setStep(step + 1);
-            setAlertMessage(""); // clear alert if valid
+            Toast.success("Step completed successfully.");
         } else {
-            setAlertMessage("Please fill all required fields correctly before proceeding.");
+            Toast.error("Please fill all required fields before continuing.");
         }
     };
 
     const prev = () => {
         if (step > 1) {
             setStep(step - 1);
-            setAlertMessage(""); // reset alert on going back
         }
     };
 
     const handleSubmit = async () => {
         if (!isStepValid) {
-            setAlertMessage("Please complete all required fields correctly.");
+            Toast.error("Please complete all fields correctly before submitting.");
             return;
         }
 
         setIsSubmitting(true);
-        setAlertMessage("");
 
         try {
             console.log("Submitting form data:", formData);
             await new Promise((resolve) => setTimeout(resolve, 1500));
+
             setIsSubmitted(true);
             setStep(3);
+            Toast.success("Account created successfully!");
         } catch (error) {
             console.error("Error submitting form:", error);
-            setAlertMessage("Something went wrong. Please try again.");
+            Toast.error("Something went wrong. Please try again.");
         } finally {
             setIsSubmitting(false);
         }
     };
 
     const renderStep = () => {
-        if (isSubmitted && step === 3) {
-            return <StepThree />;
-        }
+        if (isSubmitted && step === 3) return <StepThree />;
 
         switch (step) {
             case 1:
@@ -97,9 +119,7 @@ const SignUp = () => {
         if (step === 2) {
             return (
                 <Button onClick={handleSubmit} variant="primary" disabled={isSubmitting}>
-                    {isSubmitting ? (
-                        "Submitting..."
-                    ) : (
+                    {isSubmitting ? "Submitting..." : (
                         <span className="flex items-center gap-2">Submit <FaArrowRight /></span>
                     )}
                 </Button>
@@ -129,15 +149,9 @@ const SignUp = () => {
                         </p>
                     </div>
 
-                    <ProgressBar currentStep={step} />
+                    <ProgressBar currentStep={progress} />
 
                     {renderStep()}
-
-                    {alertMessage && (
-                        <div className="text-red-600 text-sm font-medium pt-2">
-                            {alertMessage}
-                        </div>
-                    )}
 
                     {step < 3 && (
                         <div className="flex justify-between items-center pt-4">
@@ -145,9 +159,7 @@ const SignUp = () => {
                                 <Button onClick={prev} variant="secondary">
                                     <FaArrowLeft /> Previous
                                 </Button>
-                            ) : (
-                                <div />
-                            )}
+                            ) : <div />}
                             {renderActionButton()}
                         </div>
                     )}

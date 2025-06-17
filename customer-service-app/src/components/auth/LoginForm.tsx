@@ -38,7 +38,7 @@ const LoginForm = () => {
                         <input type="checkbox" className="form-checkbox text-purple-900" />
                         Remember me for 20 days
                     </label>
-                    <a href="#" className="text-sm text-purple-900 hover:underline">Forgot password?</a>
+                    <a href="/reset-password" className="text-sm text-purple-900 hover:underline">Forgot password?</a>
                 </div>
 
                 <Button
