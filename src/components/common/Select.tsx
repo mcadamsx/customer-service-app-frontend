@@ -29,11 +29,9 @@ const SearchableSelect: React.FC<SearchableSelectProps> = ({
     const selectedLabel = options.find((opt) => opt.value === value)?.label || '';
 
     useEffect(() => {
-        // Keep searchTerm in sync with selected value label
         setSearchTerm(selectedLabel);
-    }, [value]);
+    }, [selectedLabel, value]);
 
-    // Close on outside click
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -66,7 +64,7 @@ const SearchableSelect: React.FC<SearchableSelectProps> = ({
                 onChange={(e) => {
                     setSearchTerm(e.target.value);
                     setShowOptions(true);
-                    if (onChange) onChange(''); // Clear selected value
+                    if (onChange) onChange('');
                 }}
                 onFocus={() => setShowOptions(true)}
                 placeholder={`Search ${label.toLowerCase()}...`}
