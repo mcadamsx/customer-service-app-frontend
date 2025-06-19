@@ -10,19 +10,6 @@ import LoginLeftPanel from "../../components/auth/LeftPanel.tsx";
 import AuthLayout from "../../layouts/AuthLayout.tsx";
 import Toast from "../../components/common/ToastMessage.tsx";
 
-interface FormData {
-    Token: string;
-    name: string;
-    email: string;
-    phone: string;
-    password: string;
-    confirm_password: string;
-    address_1: string;
-    address_2: string;
-    country: string;
-    region: string;
-}
-
 const SignUp = () => {
     const [step, setStep] = useState(1);
     const [isStepValid, setIsStepValid] = useState(false);
@@ -30,8 +17,7 @@ const SignUp = () => {
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [progress, setProgress] = useState(30);
 
-    const [formData, setFormData] = useState<FormData>({
-        Token: '',
+    const [formData, setFormData] = useState({
         name: '',
         email: '',
         phone: '',
@@ -42,15 +28,6 @@ const SignUp = () => {
         country: '',
         region: '',
     });
-
-    // Wrapper functions for step components
-    const setStepOneData = (data: { Token: string; name: string; email: string; password: string; confirm_password: string }) => {
-        setFormData(prev => ({ ...prev, ...data }));
-    };
-
-    const setStepTwoData = (data: { address_1: string; address_2?: string; region: string; country: string; phone: string; prefix?: string }) => {
-        setFormData(prev => ({ ...prev, ...data }));
-    };
 
     useEffect(() => {
         if (step === 1) {
@@ -121,7 +98,7 @@ const SignUp = () => {
                 return (
                     <StepOne
                         formData={formData}
-                        setFormData={setStepOneData}
+                        setFormData={setFormData}
                         setIsStepValid={setIsStepValid}
                     />
                 );
@@ -129,7 +106,7 @@ const SignUp = () => {
                 return (
                     <StepTwo
                         formData={formData}
-                        setFormData={setStepTwoData}
+                        setFormData={setFormData}
                         setIsStepValid={setIsStepValid}
                     />
                 );

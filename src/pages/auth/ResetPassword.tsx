@@ -38,12 +38,11 @@ const ResetPassword: React.FC = () => {
 
         try {
             console.log("Submitting new password:", formData);
-            await new Promise((resolve) => setTimeout(resolve, 1500)); 
+            await new Promise((resolve) => setTimeout(resolve, 1500)); // Simulate API
 
             Toast.success("Password reset successful!");
         } catch (error) {
             Toast.error("Something went wrong. Please try again.");
-            console.log(error);
         } finally {
             setIsSubmitting(false);
         }
@@ -58,7 +57,7 @@ const ResetPassword: React.FC = () => {
                         setFormData={setFormData}
                         setIsStepValid={setIsStepValid}
                     />
-                );  
+                );
             case 2:
                 return <ResetStepTwo />;
             case 3:
