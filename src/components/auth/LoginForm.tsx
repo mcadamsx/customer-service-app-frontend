@@ -2,8 +2,6 @@ import Button from '../common/Button';
 import Input from '../common/Inputs';
 import  logo  from "../../assets/logo.jpg";
 
-
-
 const LoginForm = () => {
     return (
         <div className="w-full max-w-md space-y-6">
