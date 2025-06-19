@@ -10,7 +10,6 @@ const AdminRoutes = [
                 index: true,
                 element: <AdminDashboard />,
             },
-            // more nested admin pages can go here
         ],
     },
 ];

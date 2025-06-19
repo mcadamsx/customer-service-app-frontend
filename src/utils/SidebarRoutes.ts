@@ -1,4 +1,3 @@
-// utils/sidebarRoutes.ts
 import { MdDashboard, MdGroups } from "react-icons/md";
 import { FaExclamationCircle, FaHandshake, FaIdCard, FaStar, FaUser, FaWallet} from "react-icons/fa";
 import {RiHandCoinFill} from "react-icons/ri";
@@ -15,6 +14,4 @@ export const adminRoutes = [
     { name: "Payments", path: "/payments", icon: FaWallet },
 ];
 
-export const userRoutes = [
-    { name: "My Dashboard", path: "/dashboard", icon: MdDashboard },
-];
+

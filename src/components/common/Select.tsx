@@ -64,7 +64,7 @@ const SearchableSelect: React.FC<SearchableSelectProps> = ({
                 onChange={(e) => {
                     setSearchTerm(e.target.value);
                     setShowOptions(true);
-                    if (onChange) onChange(''); // Clear selected value
+                    if (onChange) onChange('');
                 }}
                 onFocus={() => setShowOptions(true)}
                 placeholder={`Search ${label.toLowerCase()}...`}

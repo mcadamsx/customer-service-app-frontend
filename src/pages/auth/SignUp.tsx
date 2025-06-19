@@ -43,7 +43,6 @@ const SignUp = () => {
         region: '',
     });
 
-    // Wrapper functions for step components
     const setStepOneData = (data: { Token: string; name: string; email: string; password: string; confirm_password: string }) => {
         setFormData(prev => ({ ...prev, ...data }));
     };
