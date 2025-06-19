@@ -4,7 +4,7 @@ import AdminRoutes from "./AdminRoutes";
 
 const AppRoutes = () => {
     const routes = useRoutes([...AuthRoutes, ...AdminRoutes]);
-    return routes; // No BrowserRouter here!
+    return routes;
 };
 
 export default AppRoutes;
