@@ -8,3 +8,18 @@
 }
 
 
+.custom-tabs .ant-tabs-tab {
+    @apply bg-purple-100 text-gray-700 px-4 py-2 rounded-md transition;
+}
+
+.custom-tabs .ant-tabs-tab-active {
+    @apply bg-purple-900 text-white;
+}
+
+.custom-tabs .ant-tabs-tab-btn {
+    @apply font-medium;
+}
+
+.custom-tabs .ant-tabs-ink-bar {
+    @apply hidden;
+}

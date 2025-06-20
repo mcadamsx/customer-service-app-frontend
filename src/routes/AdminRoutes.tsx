@@ -1,5 +1,6 @@
 import DashboardLayout from "../layouts/DashboardLayout";
 import AdminDashboard from "../pages/admin/AdminDashboard";
+import Subscriptions  from '../pages/admin/Subscriptions.tsx';
 
 const AdminRoutes = [
     {
@@ -12,6 +13,16 @@ const AdminRoutes = [
             },
         ],
     },
+  {
+    path: "/Subscriptions",
+    element: <DashboardLayout />,
+        children: [
+          {
+            index: true,
+            element: <Subscriptions />,
+          }
+        ]
+  }
 ];
 
 export default AdminRoutes;
