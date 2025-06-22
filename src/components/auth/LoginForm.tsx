@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from 'react';
 import Input from "../common/Inputs";
 import Button from "../common/Button";
 import logo from "../../assets/logo.jpg";
@@ -17,6 +17,23 @@ interface LoginResponse {
 
 const LoginForm = () => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const token =
+      localStorage.getItem("access_token") || sessionStorage.getItem("access_token");
+    const expiryTime = localStorage.getItem("token_expiry") || sessionStorage.getItem("token_expiry");
+
+    if (token && expiryTime) {
+      const now = Date.now();
+      if (now < parseInt(expiryTime)) {
+        navigate("/Dashboard");
+      } else {
+        localStorage.clear();
+        sessionStorage.clear();
+      }
+    }
+
+  }, [navigate]);
 
   const [formData, setFormData] = useState({
     company_email: "",
@@ -51,11 +68,15 @@ const LoginForm = () => {
 
       Toast.success(data.message || "Login successful!");
 
+      const storage = formData.remember_me ? localStorage : sessionStorage;
+      const expiryTime = Date.now() + data.expires_in * 1000;
 
-      localStorage.setItem("access_token", data.access);
-      localStorage.setItem("refresh_token", data.refresh);
-      localStorage.setItem("company_email", data.company_email);
-      localStorage.setItem("company_name", data.company_name);
+      storage.setItem("access_token", data.access);
+      storage.setItem("refresh_token", data.refresh);
+      storage.setItem("company_email", data.company_email);
+      storage.setItem("company_name", data.company_name);
+      storage.setItem("token_expiry", expiryTime.toString());
+
 
       navigate("/Dashboard");
     } catch (err: unknown) {
@@ -67,6 +88,7 @@ const LoginForm = () => {
       setLoading(false);
     }
   };
+
 
   return (
     <div className="w-full max-w-md space-y-6">
