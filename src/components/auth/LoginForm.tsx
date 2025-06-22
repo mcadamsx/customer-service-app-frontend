@@ -1,60 +1,146 @@
-import Button from '../common/Button';
-import Input from '../common/Inputs';
-import  logo  from "../../assets/logo.jpg";
+import React, { useState } from "react";
+import Input from "../common/Inputs";
+import Button from "../common/Button";
+import logo from "../../assets/logo.jpg";
+import { loginCustomer } from "../../api/auth";
+import { useNavigate } from "react-router-dom";
+import Toast from "../common/ToastMessage.tsx";
+
+interface LoginResponse {
+  message: string;
+  access: string;
+  refresh: string;
+  expires_in: number;
+  company_email: string;
+  company_name: string;
+}
 
 const LoginForm = () => {
-    return (
-        <div className="w-full max-w-md space-y-6">
-            <div className="text-center">
-                <div className="flex items-center justify-center  mb-6">
-                    <img src={logo} alt="Customer Service" className="h-20" />
-                    <h1 className="text-2xl font-semibold text-purple-900">Customer Service</h1>
-                </div>
-                <h2 className="text-2xl font-bold text-gray-800">Welcome back</h2>
-                <p className="text-gray-500">Please enter your details</p>
-            </div>
+  const navigate = useNavigate();
 
-            <form className="space-y-4">
-                <Input
-                    label="Email"
-                    name="email"
-                    type="email"
-                    placeholder="Enter your email"
-                    required
-                />
+  const [formData, setFormData] = useState({
+    company_email: "",
+    password: "",
+    remember_me: false,
+  });
 
-                <Input
-                    label="Password"
-                    name="password"
-                    type="password"
-                    placeholder="Enter your password"
-                    required
-                />
+  const [loading, setLoading] = useState(false);
 
-                <div className="flex justify-between items-center ">
-                    <label className="flex items-center gap-2 text-sm text-gray-700">
-                        <input type="checkbox" className="form-checkbox text-purple-900" />
-                        Remember me for 20 days
-                    </label>
-                    <a href="/reset-password" className="text-sm text-purple-900 hover:underline">Forgot password?</a>
-                </div>
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value, type, checked } = e.target as HTMLInputElement;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
 
-                <Button
-                    type="submit"
-                    variant="primary"
-                    className="w-full flex items-center justify-center"
-                >
-                    <span className="text-white">Sign In</span>
-                </Button>
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-            </form>
+    if (!formData.company_email || !formData.password) {
+      Toast.error("Email and password are required");
+      return;
+    }
 
-            <p className="text-center text-sm text-gray-600">
-                Don’t have an account?{' '}
-                <a href="/sign-up-admin" className="text-purple-900 hover:underline">Sign Up</a>
-            </p>
+    setLoading(true);
+
+    try {
+      const data: LoginResponse = await loginCustomer(formData);
+
+      Toast.success(data.message || "Login successful!");
+
+
+      localStorage.setItem("access_token", data.access);
+      localStorage.setItem("refresh_token", data.refresh);
+      localStorage.setItem("company_email", data.company_email);
+      localStorage.setItem("company_name", data.company_name);
+
+      navigate("/Dashboard");
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { message?: string } } };
+      const message =
+        error?.response?.data?.message || "Login failed. Try again.";
+      Toast.error(message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="w-full max-w-md space-y-6">
+      <div className="text-center">
+        <div className="flex items-center justify-center mb-6">
+          <img src={logo} alt="Customer Service" className="h-20" />
+          <h1 className="text-2xl font-semibold text-purple-900">
+            Customer Service
+          </h1>
         </div>
-    );
+        <h2 className="text-2xl font-bold text-gray-800">Welcome back</h2>
+        <p className="text-gray-500">Please enter your details</p>
+      </div>
+
+      <form className="space-y-4" onSubmit={handleSubmit}>
+        <Input
+          label="Email"
+          name="company_email"
+          type="email"
+          placeholder="Enter your email"
+          value={formData.company_email}
+          onChange={handleChange}
+          required
+        />
+
+        <Input
+          label="Password"
+          name="password"
+          type="password"
+          placeholder="Enter your password"
+          value={formData.password}
+          onChange={handleChange}
+          required
+        />
+
+        <div className="flex justify-between items-center">
+          <label className="flex items-center gap-2 text-sm text-gray-700">
+            <input
+              type="checkbox"
+              name="remember_me"
+              className="form-checkbox text-purple-900"
+              checked={formData.remember_me}
+              onChange={handleChange}
+            />
+            Remember me for 20 days
+          </label>
+          <a
+            href="/reset-password"
+            className="text-sm text-purple-900 hover:underline"
+          >
+            Forgot password?
+          </a>
+        </div>
+
+        <Button
+          type="submit"
+          variant="primary"
+          className="w-full flex items-center justify-center"
+          disabled={loading}
+        >
+          <span className="text-white">
+            {loading ? "Signing in..." : "Sign In"}
+          </span>
+        </Button>
+      </form>
+
+      <p className="text-center text-sm text-gray-600">
+        Don’t have an account?{" "}
+        <a href="/sign-up-admin" className="text-purple-900 hover:underline">
+          Sign Up
+        </a>
+      </p>
+    </div>
+  );
 };
 
 export default LoginForm;
