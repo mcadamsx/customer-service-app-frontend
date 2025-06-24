@@ -40,8 +40,10 @@ const ResetPassword: React.FC = () => {
         const res = await requestPasswordReset(formData.email);
         Toast.success(res.message || "Reset link sent to your email.");
         setStep(2);
-      } catch (err: any) {
-        Toast.error(err.message || "Error sending reset email.");
+      } catch (err) {
+        const error = err as { response?: { data?: { message?: string } }, message?: string };
+        const message = error?.response?.data?.message || error?.message || "Error sending reset email.";
+        Toast.error(message);
       } finally {
         setIsSubmitting(false);
       }
@@ -51,6 +53,7 @@ const ResetPassword: React.FC = () => {
       setStep(step + 1);
     }
   };
+
 
   const handleSubmit = async () => {
     if (!isStepValid) {
