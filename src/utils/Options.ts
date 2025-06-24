@@ -76,5 +76,15 @@ export const ghanaRegionOptions = [
     { label: "Western North", value: "Western North" }
 ];
 
+export const serviceOptions = [
+  { value: "Basic Plan", label: "Basic Plan" },
+  { value: "Premium Support", label: "Premium Support" },
+  { value: "Enterprise Service", label: "Enterprise Service" },
+];
+
+export const statusOptions = [
+  { value: "Verified", label: "Verified" },
+  { value: "Not Verified", label: "Not Verified" },
+];
 
 

@@ -2,6 +2,7 @@ import DashboardLayout from "../layouts/DashboardLayout";
 import AdminDashboard from "../pages/admin/AdminDashboard";
 import Subscriptions from "../pages/admin/Subscriptions";
 import ProtectedRoute from '../components/common/ProtectedRoute.tsx';
+import Customers from '../pages/admin/Customers.tsx';
 
 const AdminRoutes = [
   {
@@ -29,6 +30,20 @@ const AdminRoutes = [
       {
         index: true,
         element: <Subscriptions />,
+      },
+    ],
+  },
+  {
+    path: "/Customers",
+    element: (
+      <ProtectedRoute>
+        <DashboardLayout />
+      </ProtectedRoute>
+    ),
+    children: [
+      {
+        index: true,
+        element: <Customers />,
       },
     ],
   },
