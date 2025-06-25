@@ -7,7 +7,9 @@ interface InputProps {
   type?: string;
   placeholder?: string;
   value?: string;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  onChange?: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
   required?: boolean;
   disabled?: boolean;
   error?: string;
@@ -15,32 +17,47 @@ interface InputProps {
   className?: string;
   variant?: 'default' | 'search';
   textarea?: boolean;
+  defaultValue?: string;
 }
 
 const Input: React.FC<InputProps> = ({
-                                       label,
-                                       name,
-                                       type = 'text',
-                                       placeholder,
-                                       value,
-                                       onChange,
-                                       required = false,
-                                       disabled = false,
-                                       error,
-                                       icon,
-                                       className = '',
-                                       variant = 'default',
-                                       textarea = false,
-                                     }) => {
+  label,
+  name,
+  type = 'text',
+  placeholder,
+  value,
+  onChange,
+  required = false,
+  disabled = false,
+  error,
+  icon,
+  className = '',
+  variant = 'default',
+  textarea = false,
+  defaultValue ,
+
+}) => {
   const [showPassword, setShowPassword] = useState(false);
   const isPassword = type === 'password';
   const inputType = isPassword && showPassword ? 'text' : type;
   const showSearchIcon = variant === 'search';
 
+  const baseClasses = `
+    w-full px-4 py-2 border rounded-lg transition 
+    focus:outline-none focus:ring-2 focus:ring-purple-700 
+    ${error ? 'border-red-500' : 'border-gray-300'}
+    ${icon || showSearchIcon ? 'pl-10' : ''}
+    ${isPassword ? 'pr-10' : ''}
+    ${disabled ? 'bg-gray-100 cursor-not-allowed' : ''}
+  `;
+
   return (
     <div className={`w-full ${className}`}>
       {label && (
-        <label htmlFor={name} className="block text-sm font-medium text-gray-700 mb-1">
+        <label
+          htmlFor={name}
+          className="block text-sm font-medium text-gray-700 mb-1"
+        >
           {label}
         </label>
       )}
@@ -56,33 +73,26 @@ const Input: React.FC<InputProps> = ({
           <textarea
             id={name}
             name={name}
-            placeholder={placeholder}
             value={value}
+            placeholder={placeholder}
             onChange={onChange}
             required={required}
             disabled={disabled}
             rows={4}
-            className={`w-full px-4 py-2 border ${
-              error ? 'border-red-500' : 'border-gray-300'
-            } rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-700 transition ${
-              icon || showSearchIcon ? 'pl-10' : ''
-            }`}
+            className={baseClasses}
           />
         ) : (
           <input
             id={name}
             name={name}
             type={inputType}
-            placeholder={placeholder}
             value={value}
+            placeholder={placeholder}
             onChange={onChange}
             required={required}
             disabled={disabled}
-            className={`w-full px-4 py-2 border ${
-              error ? 'border-red-500' : 'border-gray-300'
-            } rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-700 transition
-            ${icon || showSearchIcon ? 'pl-10' : ''}
-            ${isPassword ? 'pr-10' : ''}`}
+            className={baseClasses}
+            defaultValue={defaultValue}
           />
         )}
 

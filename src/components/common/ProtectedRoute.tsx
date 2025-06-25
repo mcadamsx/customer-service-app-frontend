@@ -3,7 +3,7 @@ import type { JSX } from 'react';
 
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
   const token =
-    localStorage.getItem("access_token") || sessionStorage.getItem("access_token");
+    localStorage.getItem("access_token") ?? sessionStorage.getItem("access_token");
 
   if (!token) {
     return <Navigate to="/" replace />;

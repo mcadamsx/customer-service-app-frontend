@@ -41,15 +41,13 @@ export const loginCustomer = async (payload: LoginPayload) => {
   return response.data;
 };
 
-
-
 export const requestPasswordReset = async (email: string) => {
   try {
     const response = await api.post("/api/admin/forgot-password/", { email });
     return response.data;
   } catch (error) {
     const err = error as AxiosError<{ message?: string }>;
-    const message = err.response?.data?.message || "Failed to send reset email";
+    const message = err.response?.data?.message ?? "Failed to send reset email";
     throw new Error(message);
   }
 };
@@ -66,6 +64,3 @@ export const resetPassword = async (payload: {
   });
   return response.data;
 };
-
-
-

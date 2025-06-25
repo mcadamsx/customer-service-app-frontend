@@ -38,11 +38,11 @@ const ResetPassword: React.FC = () => {
       try {
         setIsSubmitting(true);
         const res = await requestPasswordReset(formData.email);
-        Toast.success(res.message || "Reset link sent to your email.");
+        Toast.success(res.message ?? "Reset link sent to your email.");
         setStep(2);
       } catch (err) {
         const error = err as { response?: { data?: { message?: string } }, message?: string };
-        const message = error?.response?.data?.message || error?.message || "Error sending reset email.";
+        const message = error?.response?.data?.message ?? error?.message ?? "Error sending reset email.";
         Toast.error(message);
       } finally {
         setIsSubmitting(false);
@@ -87,11 +87,10 @@ const ResetPassword: React.FC = () => {
       }>;
 
       const message =
-        axiosError.response?.data?.confirm_password?.[0] ||
-        axiosError.response?.data?.new_password?.[0] ||
-        axiosError.response?.data?.message ||
+        axiosError.response?.data?.confirm_password?.[0] ??
+        axiosError.response?.data?.new_password?.[0] ??
+        axiosError.response?.data?.message ??
         "Something went wrong.";
-
       Toast.error(message);
     } finally {
       setIsSubmitting(false);
@@ -169,6 +168,26 @@ const ResetPassword: React.FC = () => {
     return null;
   };
 
+
+  const subtitleContent = (() => {
+    if (step === 2) {
+      return (
+        <>
+          We have sent an email with a reset password link to <br />
+          <span className="font-medium text-purple-900">{formData.email}</span>
+        </>
+      );
+    } else if (step === 3) {
+      return "Enter your new password.";
+    } else {
+      return "Enter the email address associated with your account and we'll send you a link to reset your password.";
+    }
+  })();
+
+
+
+
+
   return (
     <AuthLayout
       leftContent={<LoginLeftPanel />}
@@ -182,26 +201,11 @@ const ResetPassword: React.FC = () => {
               </h1>
             </div>
             <h2 className="text-2xl font-bold text-gray-800">
-              {step === 2
-                ? "Check Your Email"
-                : step === 3
-                  ? "Set New Password"
-                  : "Forgot Password?"}
+              {step === 3 ? "Set New Password" : "Forgot Password?"}
             </h2>
-            <p className="text-sm text-gray-500">
-              {step === 2 ? (
-                <>
-                  We have sent an email with a reset password link to <br />
-                  <span className="font-medium text-purple-900">
-                    {formData.email}
-                  </span>
-                </>
-              ) : step === 3 ? (
-                "Enter your new password."
-              ) : (
-                "Enter the email address associated with your account and we'll send you a link to reset your password."
-              )}
-            </p>
+
+            <p className="text-sm text-gray-500">{subtitleContent}</p>
+
           </div>
 
           {renderStep()}
