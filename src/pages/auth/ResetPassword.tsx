@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 
 import Button from "../../components/common/Button";
 import AuthLayout from "../../layouts/AuthLayout";
@@ -138,9 +138,9 @@ const ResetPassword: React.FC = () => {
 
           <p className="text-center text-sm text-gray-600">
             Return to{" "}
-            <a href="/" className="text-purple-900 hover:underline">
+            <Link to="/" className="text-purple-900 hover:underline">
               Sign In
-            </a>
+            </Link>
           </p>
         </div>
       );
@@ -158,9 +158,9 @@ const ResetPassword: React.FC = () => {
           </Button>
           <p className="text-center text-sm text-gray-600">
             Return to{" "}
-            <a href="/" className="text-purple-900 hover:underline">
+            <Link to="/" className="text-purple-900 hover:underline">
               Sign In
-            </a>
+            </Link>
           </p>
         </div>
       );

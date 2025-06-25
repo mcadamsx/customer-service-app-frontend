@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FaPlusCircle } from 'react-icons/fa';
+import { FaArrowDown, FaPlusCircle } from 'react-icons/fa';
 
 import CustomTable from "../../components/common/Table";
 import Button from "../../components/common/Button";
@@ -51,6 +51,8 @@ const Customers: React.FC = () => {
     service: "",
     datePurchased: "",
     status: "",
+    Company_name: "",
+    Phone: "",
   });
 
   const openModal = () => setModalOpen(true);
@@ -62,6 +64,8 @@ const Customers: React.FC = () => {
       service: "",
       datePurchased: "",
       status: "",
+      Company_name: "",
+      Phone: "",
     });
   };
 
@@ -83,25 +87,31 @@ const Customers: React.FC = () => {
 
   return (
     <div className="p-4 space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-xl font-semibold text-gray-800">Customer Management</h2>
-        <Button
-          className="flex items-center gap-2 px-4 py-2 rounded-md bg-purple-900 text-white hover:bg-purple-800"
-          onClick={openModal}
-        >
-          <FaPlusCircle />
-          <span>Add New Customer</span>
-        </Button>
+      <div className="flex justify-between items-center mt-4">
+        <Input
+          name="search"
+          placeholder="Search by name, email or service..."
+          value={searchItem}
+          onChange={(e) => setSearchItem(e.target.value)}
+          variant="search"
+          className="w-full md:w-72"
+        />
+        <div className="flex gap-2">
+          <Button variant="secondary">
+            Select filter <FaArrowDown />
+          </Button>
+          <Button
+            className="flex items-center gap-2 px-4 py-2 rounded-md bg-purple-900 text-white hover:bg-purple-800"
+            onClick={openModal}
+          >
+            <FaPlusCircle />
+            <span>Add New Customer</span>
+          </Button>
+        </div>
+
       </div>
 
-      <Input
-        name="search"
-        placeholder="Search by name, email or service..."
-        value={searchItem}
-        onChange={(e) => setSearchItem(e.target.value)}
-        variant="search"
-        className="w-full md:w-72"
-      />
+
 
       <CustomTable
         title="Customers"
@@ -113,12 +123,16 @@ const Customers: React.FC = () => {
       <CustomModal onClose={closeModal} open={isModalOpen} title="Add New Customer">
         <div className="p-6 space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Input name="name" label="Customer Name" placeholder="Enter full name or company" value={formData.name} onChange={handleInputChange} />
-            <Input name="email" label="Email" placeholder="Enter email address" value={formData.email} onChange={handleInputChange} />
-            <Input name="datePurchased" label="Date Purchased" type="date" value={formData.datePurchased} onChange={handleInputChange} />
+            <Input name="name" label="Customer Name" placeholder="Enter customer name" value={formData.name} onChange={handleInputChange} />
+            <Input name="email" label="Email" placeholder="Enter email " value={formData.email} onChange={handleInputChange} />
+            <Input name="company_name" label="Company Name" placeholder="G-Lite Ltd" value={formData.Company_name} onChange={handleInputChange} />
+            <Input name="Phone" label="Phone" placeholder="Optional" value={formData.Phone} onChange={handleInputChange} />
           </div>
-
-          <div className="flex justify-end gap-2 mt-4">
+          <span className="flex justify-center text-sky-700 gap-1">
+                <FaPlusCircle className="mt-1" />
+                Add more
+          </span>
+          <div className="flex justify-center gap-2 mt-4">
             <Button variant="secondary" onClick={closeModal}>Cancel</Button>
             <Button variant="primary" onClick={handleAddCustomer}>Add Customer</Button>
           </div>

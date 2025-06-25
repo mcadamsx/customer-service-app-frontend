@@ -3,7 +3,7 @@ import Input from "../common/Inputs";
 import Button from "../common/Button";
 import logo from "../../assets/logo.jpg";
 import { loginCustomer } from "../../api/auth";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from 'react-router-dom';
 import Toast from "../common/ToastMessage.tsx";
 
 interface LoginResponse {
@@ -114,9 +114,9 @@ const LoginForm = () => {
             />
             Remember me for 20 days
           </label>
-          <a href="/reset-password" className="text-sm text-purple-900 hover:underline">
+          <Link to="/reset-password" className="text-sm text-purple-900 hover:underline">
             Forgot password?
-          </a>
+          </Link>
         </div>
 
         <Button
@@ -131,9 +131,9 @@ const LoginForm = () => {
 
       <p className="text-center text-sm text-gray-600">
         Don’t have an account?{" "}
-        <a href="/sign-up-admin" className="text-purple-900 hover:underline">
+        <Link to="/sign-up-admin" className="text-purple-900 hover:underline">
           Sign Up
-        </a>
+        </Link>
       </p>
     </div>
   );
