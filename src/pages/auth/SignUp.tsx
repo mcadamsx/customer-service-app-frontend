@@ -9,6 +9,7 @@ import StepThree from "../../components/auth/SignUpForms/StepThree.tsx";
 import LoginLeftPanel from "../../components/auth/LeftPanel.tsx";
 import AuthLayout from "../../layouts/AuthLayout.tsx";
 import Toast from "../../components/common/ToastMessage.tsx";
+import { registerCustomer } from '../../api/auth.ts';
 
 interface FormData {
     Token: string;
@@ -89,30 +90,59 @@ const SignUp = () => {
         }
     };
 
-    const handleSubmit = async () => {
-        if (!isStepValid) {
-            Toast.error("Please complete all fields correctly before submitting.");
-            return;
-        }
+  const handleSubmit = async () => {
+    if (!isStepValid) {
+      Toast.error("Please complete all fields correctly before submitting.");
+      return;
+    }
 
-        setIsSubmitting(true);
+    setIsSubmitting(true);
 
-        try {
-            console.log("Submitting form data:", formData);
-            await new Promise((resolve) => setTimeout(resolve, 1500));
-
-            setIsSubmitted(true);
-            setStep(3);
-            Toast.success("Account created successfully!");
-        } catch (error) {
-            console.error("Error submitting form:", error);
-            Toast.error("Something went wrong. Please try again.");
-        } finally {
-            setIsSubmitting(false);
-        }
+    const payload = {
+      company_name: formData.name,
+      company_email: formData.email,
+      password: formData.password,
+      repeat_password: formData.confirm_password,
+      address1: formData.address_1,
+      address2: formData.address_2,
+      region: formData.region,
+      country: formData.country,
+      phone: formData.phone,
     };
 
-    const renderStep = () => {
+    try {
+      const response = await registerCustomer(payload);
+      console.log("Registration success:", response);
+
+      setIsSubmitted(true);
+      setStep(3);
+      Toast.success("Account created successfully!");
+    } catch (error: unknown) {
+      console.error("Registration failed:", error);
+
+      let message = "Something went wrong. Please try again.";
+
+      if (typeof error === "object" && error !== null && "response" in error) {
+        const err = error as {
+          response?: {
+            data?: {
+              message?: string;
+            };
+          };
+        };
+
+        message = err.response?.data?.message || message;
+      }
+
+      Toast.error(message);
+    } finally {
+      setIsSubmitting(false);
+    }
+
+  };
+
+
+  const renderStep = () => {
         if (isSubmitted && step === 3) return <StepThree />;
 
         switch (step) {
