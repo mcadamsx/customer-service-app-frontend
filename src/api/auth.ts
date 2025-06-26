@@ -1,4 +1,5 @@
 import api from "./client.ts"
+import type { AxiosError } from 'axios';
 
 export interface CustomerRegisterPayload {
   company_name: string;
@@ -37,5 +38,29 @@ export interface LoginPayload {
 
 export const loginCustomer = async (payload: LoginPayload) => {
   const response = await api.post("/api/admin/login/", payload);
+  return response.data;
+};
+
+export const requestPasswordReset = async (email: string) => {
+  try {
+    const response = await api.post("/api/admin/forgot-password/", { email });
+    return response.data;
+  } catch (error) {
+    const err = error as AxiosError<{ message?: string }>;
+    const message = err.response?.data?.message ?? "Failed to send reset email";
+    throw new Error(message);
+  }
+};
+
+export const resetPassword = async (payload: {
+  token: string;
+  new_password: string;
+  confirm_password: string;
+}) => {
+  const response = await api.post(`/api/admin/reset-password/${payload.token}/`, {
+    token: payload.token,
+    new_password: payload.new_password,
+    confirm_password: payload.confirm_password,
+  });
   return response.data;
 };
