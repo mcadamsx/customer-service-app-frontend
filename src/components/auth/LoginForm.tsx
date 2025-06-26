@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Input from "../common/Inputs";
 import Button from "../common/Button";
 import logo from "../../assets/logo.jpg";
 import { loginCustomer } from "../../api/auth";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from 'react-router-dom';
 import Toast from "../common/ToastMessage.tsx";
 
 interface LoginResponse {
@@ -17,23 +17,6 @@ interface LoginResponse {
 
 const LoginForm = () => {
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const token =
-      localStorage.getItem("access_token") || sessionStorage.getItem("access_token");
-    const expiryTime = localStorage.getItem("token_expiry") || sessionStorage.getItem("token_expiry");
-
-    if (token && expiryTime) {
-      const now = Date.now();
-      if (now < parseInt(expiryTime)) {
-        navigate("/Dashboard");
-      } else {
-        localStorage.clear();
-        sessionStorage.clear();
-      }
-    }
-
-  }, [navigate]);
 
   const [formData, setFormData] = useState({
     company_email: "",
@@ -77,7 +60,6 @@ const LoginForm = () => {
       storage.setItem("company_name", data.company_name);
       storage.setItem("token_expiry", expiryTime.toString());
 
-
       navigate("/Dashboard");
     } catch (err: unknown) {
       const error = err as { response?: { data?: { message?: string } } };
@@ -89,15 +71,12 @@ const LoginForm = () => {
     }
   };
 
-
   return (
     <div className="w-full max-w-md space-y-6">
       <div className="text-center">
         <div className="flex items-center justify-center mb-6">
           <img src={logo} alt="Customer Service" className="h-20" />
-          <h1 className="text-2xl font-semibold text-purple-900">
-            Customer Service
-          </h1>
+          <h1 className="text-2xl font-semibold text-purple-900">Customer Service</h1>
         </div>
         <h2 className="text-2xl font-bold text-gray-800">Welcome back</h2>
         <p className="text-gray-500">Please enter your details</p>
@@ -135,12 +114,9 @@ const LoginForm = () => {
             />
             Remember me for 20 days
           </label>
-          <a
-            href="/reset-password"
-            className="text-sm text-purple-900 hover:underline"
-          >
+          <Link to="/reset-password" className="text-sm text-purple-900 hover:underline">
             Forgot password?
-          </a>
+          </Link>
         </div>
 
         <Button
@@ -149,17 +125,15 @@ const LoginForm = () => {
           className="w-full flex items-center justify-center"
           disabled={loading}
         >
-          <span className="text-white">
-            {loading ? "Signing in..." : "Sign In"}
-          </span>
+          <span className="text-white">{loading ? "Signing in..." : "Sign In"}</span>
         </Button>
       </form>
 
       <p className="text-center text-sm text-gray-600">
         Don’t have an account?{" "}
-        <a href="/sign-up-admin" className="text-purple-900 hover:underline">
+        <Link to="/sign-up-admin" className="text-purple-900 hover:underline">
           Sign Up
-        </a>
+        </Link>
       </p>
     </div>
   );
