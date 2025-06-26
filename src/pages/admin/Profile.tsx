@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaEdit } from 'react-icons/fa';
 import Button from '../../components/common/Button';
 import Input from '../../components/common/Inputs.tsx';
 import SearchableSelect from '../../components/common/Select.tsx';
+import PhoneInput from '../../components/common/PhoneInput.tsx';
 import {
   africanCountryOptions,
   ghanaRegionOptions,
 } from '../../utils/Options.ts';
-import PhoneInput from '../../components/common/PhoneInput.tsx';
+import { getProfile } from '../../api/profile.ts';
+import Toast from '../../components/common/ToastMessage';
 
 interface FormData {
   address_1: string;
@@ -16,36 +18,72 @@ interface FormData {
   country: string;
   phone: string;
   prefix?: string;
+  company_name: string;
+  company_email: string;
+  company_description?: string;
+  profile_photo?: string;
 }
 
 const Profile: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [activeTab, setActiveTab] = useState<'general' | 'password'>('general');
-
-  const companyName = localStorage.getItem("company_name") ?? "Admin";
-  const companyEmail = localStorage.getItem("company_email") ?? "admin@example.com";
-
   const [formData, setFormData] = useState<FormData>({
     address_1: '',
     region: '',
     country: '',
     phone: '',
     prefix: '+233',
+    company_name: '',
+    company_email: '',
+    company_description: '',
+    profile_photo: '',
   });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const profile = await getProfile();
+        setFormData({
+          address_1: profile.address1,
+          region: profile.region,
+          country: profile.country,
+          phone: profile.phone,
+          prefix: '+233',
+          company_name: profile.company_name,
+          company_email: profile.company_email,
+          company_description: profile.company_description,
+          profile_photo: profile.profile_photo,
+        });
+      } catch (err) {
+        Toast.error("Failed to load profile data.");
+        console.error(err);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const handleCancel = () => {
+    setIsEditing(false);
+  };
+
+  const handleSave = () => {
+    Toast.success("Changes saved successfully!");
+    setIsEditing(false);
+  };
 
   return (
     <div className="space-y-6 p-6">
       <div className="bg-white shadow-md rounded-xl p-6 flex flex-col sm:flex-row sm:items-center justify-between">
         <div className="flex items-center gap-4">
           <img
-            src=""
+            src={formData.profile_photo ?? '/placeholder.jpg'}
             alt="Profile"
-            className="w-20 h-20 rounded-full border"
+            className="w-20 h-20 rounded-full border object-cover"
           />
           <div>
-            <h2 className="text-xl font-bold text-gray-800">{companyName}</h2>
-            <p className="text-gray-600">Email: {companyEmail}</p>
-            <p className="text-gray-600">Phone: +233 558 3952</p>
+            <h2 className="text-xl font-bold text-gray-800">{formData.company_name ?? 'Admin'}</h2>
+            <p className="text-gray-600">Email: {formData.company_email}</p>
+            <p className="text-gray-600">Phone: {formData.phone}</p>
             <span className="text-xs text-gray-500 italic">Admin Profile</span>
           </div>
         </div>
@@ -57,6 +95,7 @@ const Profile: React.FC = () => {
         </div>
       </div>
 
+      {/* Tabs */}
       <div className="flex justify-center">
         <button
           onClick={() => setActiveTab('general')}
@@ -94,9 +133,9 @@ const Profile: React.FC = () => {
                 type="text"
                 name="fullName"
                 label="Full Name"
+                value={formData.company_name}
+                onChange={(e) => setFormData({ ...formData, company_name: e.target.value })}
                 {...(!isEditing && { disabled: true })}
-                defaultValue={companyName}
-                placeholder="Enter full name"
               />
 
               <SearchableSelect
@@ -113,9 +152,9 @@ const Profile: React.FC = () => {
                 type="email"
                 name="companyEmail"
                 label="Email"
-                {...(!isEditing && { disabled: true })}
-                defaultValue={companyEmail}
-                placeholder="Enter email address"
+                value={formData.company_email}
+                onChange={(e) => setFormData({ ...formData, company_email: e.target.value })}
+                disabled={!isEditing}
               />
 
               <SearchableSelect
@@ -147,15 +186,22 @@ const Profile: React.FC = () => {
                 {...(!isEditing && { disabled: true })}
               />
             </div>
-          </form>
-          <Input name="description" label="Company Description(in less than 25 words)" {...(!isEditing && { disabled: true })} textarea />
 
+            <Input
+              name="description"
+              label="Company Description (in less than 25 words)"
+              textarea
+              value={formData.company_description}
+              onChange={(e) => setFormData({ ...formData, company_description: e.target.value })}
+              {...(!isEditing && { disabled: true })}
+            />
+          </form>
 
           <div className="flex justify-end gap-4">
-            <Button variant="secondary" disabled={!isEditing}>
+            <Button variant="secondary" disabled={!isEditing} onClick={handleCancel}>
               Cancel
             </Button>
-            <Button variant="primary" disabled={!isEditing}>
+            <Button variant="primary" disabled={!isEditing} onClick={handleSave}>
               Save Changes
             </Button>
           </div>

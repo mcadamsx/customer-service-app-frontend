@@ -2,7 +2,12 @@ import { Outlet } from "react-router-dom";
 import Sidebar from "../components/common/Sidebar.tsx"
 import {adminRoutes} from "../utils/SidebarRoutes.ts";
 import Topbar from "../components/common/Topbar.tsx";
+// import {customerRoutes} from '../utils/SidebarRoutes.ts';
+
 const DashboardLayout = () => {
+  // const userRole = localStorage.getItem("role");
+  // const sidebarRoutes = userRole === "Admin" ? adminRoutes : customerRoutes;
+
     return (
         <div className="flex h-screen overflow-hidden">
             <Sidebar routes={adminRoutes} />

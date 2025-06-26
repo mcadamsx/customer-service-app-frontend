@@ -24,7 +24,6 @@ const Sidebar: React.FC<SidebarProps> = ({ routes }) => {
                 collapsed ? "w-20" : "w-64"
             }`}
         >
-            {/* Toggle Button */}
             <div className="flex justify-center items-center p-4">
                 <button onClick={() => setCollapsed(!collapsed)}>
                     <FaAnglesLeft
@@ -34,9 +33,7 @@ const Sidebar: React.FC<SidebarProps> = ({ routes }) => {
                     />
                 </button>
             </div>
-
-            {/* Logo */}
-            <div className="flex justify-center">
+           <div className="flex justify-center">
                 <img
                     src={logo1}
                     alt="Customer Service"
@@ -46,7 +43,6 @@ const Sidebar: React.FC<SidebarProps> = ({ routes }) => {
                 />
             </div>
 
-            {/* Menu Items */}
             <nav className="mt-6 flex flex-col items-center space-y-2 px-2">
                 {routes.map(({ name, path, icon: Icon }) => (
                     <Link to={path} key={name} className="w-full">
