@@ -43,7 +43,6 @@ const StepOne: React.FC<StepOneProps> = ({ formData, setFormData, setIsStepValid
       <Input
         label="Registration Token"
         name="Token"
-        placeholder="IDFKK89EAK"
         value={formData.Token}
         onChange={(e) => setFormData({ ...formData, Token: e.target.value })}
         disabled

@@ -2,6 +2,7 @@ import api from "./client.ts"
 import type { AxiosError } from 'axios';
 
 export interface CustomerRegisterPayload {
+  token: string;
   company_name: string;
   company_email: string;
   password: string;
