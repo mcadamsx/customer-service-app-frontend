@@ -40,7 +40,7 @@ const Profile: React.FC = () => {
   });
 
   useEffect(() => {
-    const fetchData = async () => {
+    (async () => {
       try {
         const profile = await getProfile();
         setFormData({
@@ -58,9 +58,9 @@ const Profile: React.FC = () => {
         Toast.error("Failed to load profile data.");
         console.error(err);
       }
-    };
-    fetchData();
+    })();
   }, []);
+
 
   const handleCancel = () => {
     setIsEditing(false);
@@ -115,6 +115,7 @@ const Profile: React.FC = () => {
         </button>
       </div>
 
+      {/* GENERAL TAB */}
       {activeTab === 'general' && (
         <>
           <form className="bg-white shadow-sm rounded-xl p-6 space-y-6">
@@ -207,6 +208,57 @@ const Profile: React.FC = () => {
           </div>
         </>
       )}
+
+      {activeTab === 'password' && (
+        <>
+        <form className="bg-white shadow-sm rounded-xl p-6 space-y-6 max-w-xl mx-auto">
+          <div className="flex justify-between items-center">
+            <h3 className="text-lg font-semibold text-gray-800">
+              Change Password
+            </h3>
+            <Button variant="secondary" onClick={() => setIsEditing(true)}>
+              <FaEdit />
+              Edit
+            </Button>
+          </div>
+
+          <Input
+            label="Current Password"
+            name="currentPassword"
+            type="password"
+            placeholder="Enter current password"
+            required
+          />
+
+          <Input
+            label="New Password"
+            name="newPassword"
+            type="password"
+            placeholder="Enter new password"
+            required
+          />
+
+          <Input
+            label="Confirm New Password"
+            name="confirmNewPassword"
+            type="password"
+            placeholder="Repeat new password"
+            required
+          />
+
+
+        </form>
+        <div className="flex justify-center gap-4">
+        <Button variant="secondary" disabled={!isEditing} onClick={handleCancel}>
+            Cancel
+          </Button>
+        <Button variant="primary" disabled={!isEditing} onClick={handleSave}>
+          Save Changes
+        </Button>
+        </div>
+        </>
+      )}
+
     </div>
   );
 };
