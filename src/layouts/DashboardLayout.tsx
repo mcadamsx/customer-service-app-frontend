@@ -1,13 +1,13 @@
 import { Outlet } from "react-router-dom";
 import Sidebar from "../components/common/Sidebar.tsx"
-import {  customerRoutes } from '../utils/SidebarRoutes.ts';
+import {  adminRoutes } from '../utils/SidebarRoutes.ts';
 import Topbar from "../components/common/Topbar.tsx";
 
 const DashboardLayout = () => {
 
     return (
         <div className="flex h-screen overflow-hidden">
-            <Sidebar routes={customerRoutes} />
+            <Sidebar routes={adminRoutes} />
 
             <div className="flex flex-col flex-1">
                 <Topbar />

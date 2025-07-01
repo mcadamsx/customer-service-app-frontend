@@ -1,5 +1,5 @@
-import api from "./client.ts"
 import type { AxiosError } from 'axios';
+import api from './client.ts';
 
 export interface CustomerRegisterPayload {
   token: string;

@@ -5,16 +5,16 @@ import { DatePicker, Dropdown, message } from 'antd';
 import type { MenuProps } from 'antd';
 import dayjs, { Dayjs } from 'dayjs';
 import type { ColumnsType } from 'antd/es/table';
+import { useNavigate } from 'react-router-dom';
+
 import CustomTable from '../../components/common/Table.tsx';
 import Button from '../../components/common/Button.tsx';
 import Input from '../../components/common/Inputs.tsx';
 import CustomModal from '../../components/common/Modal.tsx';
 import SearchableSelect from '../../components/common/Select.tsx';
 
-// Define status as a union type for better type safety
 type SubscriptionStatus = 'Current' | 'Pending' | 'Expired' | 'Unsubscribed';
 
-// Define billing type options
 type BillingType = 'Monthly' | 'Annual' | 'One-time' | 'Quarterly';
 
 interface ProductEntry {
@@ -38,7 +38,6 @@ interface FormData {
   expireDate: string | null;
 }
 
-// Define menu action types
 type MenuAction = 'subscribe' | 'unsubscribe' | 'view';
 
 const initialData: ProductEntry[] = [
@@ -78,8 +77,14 @@ const CustomerSubscriptions: React.FC = () => {
     expireDate: null,
   });
 
+  const navigate = useNavigate();
+
   const handleMenuClick = (record: ProductEntry, action: MenuAction): void => {
-    message.info(`${action} clicked for ${record.product}`);
+    if (action === 'view') {
+      navigate(`/customer-subscriptions/${record.key}`);
+    } else {
+      message.info(`${action} clicked for ${record.product}`);
+    }
   };
 
   const handleAddEntry = (): void => {
@@ -130,12 +135,12 @@ const CustomerSubscriptions: React.FC = () => {
 
   const handleDateChange =
     (field: 'dateIssued' | 'expireDate') =>
-    (_date: Dayjs | null, dateString: string | string[]): void => {
-      setFormData((prev) => ({
-        ...prev,
-        [field]: Array.isArray(dateString) ? dateString[0] : dateString,
-      }));
-    };
+      (_date: Dayjs | null, dateString: string | string[]): void => {
+        setFormData((prev) => ({
+          ...prev,
+          [field]: Array.isArray(dateString) ? dateString[0] : dateString,
+        }));
+      };
 
   const columns: ColumnsType<ProductEntry> = [
     {
@@ -274,7 +279,6 @@ const CustomerSubscriptions: React.FC = () => {
         rowKey="key"
       />
 
-
       <CustomModal onClose={closeModal} open={isModalOpen} title="New Subscription">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Input
@@ -285,8 +289,7 @@ const CustomerSubscriptions: React.FC = () => {
             onChange={handleInputChange('product')}
             required
           />
-
-
+          <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Date Issued
             </label>
@@ -297,8 +300,7 @@ const CustomerSubscriptions: React.FC = () => {
               format="YYYY-MM-DD"
               placeholder="Select date issued"
             />
-
-
+          </div>
           <Input
             name="service"
             label="Service"
@@ -307,7 +309,6 @@ const CustomerSubscriptions: React.FC = () => {
             onChange={handleInputChange('service')}
             required
           />
-
           <SearchableSelect
             label="Billing Type"
             name="billingType"
@@ -323,9 +324,6 @@ const CustomerSubscriptions: React.FC = () => {
           />
         </div>
 
-
-
-
         <div className="mt-4">
           <Input
             name="description"
@@ -336,7 +334,6 @@ const CustomerSubscriptions: React.FC = () => {
             textarea
           />
         </div>
-
 
         <button
           type="button"

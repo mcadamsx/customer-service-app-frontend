@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { FaEnvelope } from 'react-icons/fa';
+import { FaChevronRight, FaEnvelope } from 'react-icons/fa';
 import Button from "../../components/common/Button.tsx";
 import CustomTable from '../../components/common/Table.tsx';
 
@@ -105,11 +105,11 @@ const CustomerDetails: React.FC = () => {
   return (
     <div className="p-6 space-y-6">
       <div className="flex justify-between items-center">
-        <nav className="text-sm text-gray-500 space-x-2">
+        <nav className="text-sm text-gray-500 flex  space-x-2">
           <Link to="/Customers" className="text-purple-700 font-medium hover:underline">
             Customers
           </Link>
-          <span>&gt;</span>
+          <span className="mt-1"><FaChevronRight  /></span>
           <span>Customer Details</span>
         </nav>
         <Button variant="primary">
