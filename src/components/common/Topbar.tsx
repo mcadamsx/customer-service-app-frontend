@@ -15,7 +15,7 @@ const Topbar: React.FC = () => {
 
   const handleLogout = () => {
     localStorage.clear();
-    navigate("/login");
+    navigate("/");
   };
 
   const items: MenuProps['items'] = [
