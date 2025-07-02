@@ -11,12 +11,20 @@ import {
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 
-export interface RevenueDataEntry {
-  name: string;
-  Tablet: number;
-  Internet: number;
-  Voice: number;
+export interface RevenueData {
+  total_revenue: number;
+  revenue_growth_percent: number;
+  revenue_per_service: {
+    service: string;
+    revenue: number;
+  }[];
 }
+export interface RevenueDataEntry {
+  service: string;
+  revenue: number;
+}
+
+
 
 interface RevenueChartProps {
   data: RevenueDataEntry[];

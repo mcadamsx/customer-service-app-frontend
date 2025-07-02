@@ -6,21 +6,22 @@ import CustomerActivityChart from "../../components/common/CustomerActivityChart
 import CustomerLocationsDashboard from "../../components/common/CustomerLocationChart.tsx";
 import {
   type DashboardStats,
+  type RevenueData,
+  type ActivityData,
+  type LocationData,
   fetchCustomerActivity,
   fetchCustomerLocations,
   fetchDashboardStats,
   fetchRevenueData,
-} from '../../api/dashboard.ts';
-
-
+} from "../../api/dashboard.ts";
 
 const AdminDashboard = () => {
   const companyName = localStorage.getItem("company_name") ?? "Admin";
 
   const [stats, setStats] = useState<DashboardStats | null>(null);
-  const [revenueData, setRevenueData] = useState([]);
-  const [activityData, setActivityData] = useState([]);
-  const [locationData, setLocationData] = useState([]);
+  const [revenueData, setRevenueData] = useState<RevenueData | null>(null);
+  const [activityData, setActivityData] = useState<ActivityData | null>(null);
+  const [locationData, setLocationData] = useState<LocationData | null>(null);
 
   useEffect(() => {
     const loadData = async () => {
@@ -36,6 +37,11 @@ const AdminDashboard = () => {
         setRevenueData(revenueRes);
         setActivityData(activityRes);
         setLocationData(locationRes);
+
+        console.log("Stats:", statsRes);
+        console.log("Revenue:", revenueRes);
+        console.log("Activity:", activityRes);
+        console.log("Locations:", locationRes);
       } catch (error) {
         console.error("Failed to fetch dashboard data", error);
       }
@@ -59,7 +65,7 @@ const AdminDashboard = () => {
             <div className={`${isPositive ? "text-green-600" : "text-red-700"} text-sm flex gap-2 mt-2`}>
               <ArrowIcon className="mt-0.5" />
               {isPositive ? "+" : ""}
-              {change.toFixed(2)}
+              {change.toFixed(2)}%
             </div>
           </div>
         </div>
@@ -80,18 +86,17 @@ const AdminDashboard = () => {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
-        {renderCard("VERIFIED CUSTOMERS", stats?.verifiedCustomers?.count ?? 0, stats?.verifiedCustomers?.change ?? 0)}
-        {renderCard("NEW CUSTOMERS", stats?.newCustomers?.count ?? 0, stats?.newCustomers?.change ?? 0)}
-        {renderCard("OPEN TICKETS", stats?.openTickets?.count ?? 0, stats?.openTickets?.change ?? 0)}
-        {renderCard("SUB-ADMINS", stats?.subAdmins?.count ?? 0, stats?.subAdmins?.change ?? 0)}
+        {renderCard("VERIFIED CUSTOMERS", stats?.verifiedCustomers?.count ?? 0, stats?.verifiedCustomers?.percent_change ?? 0)}
+        {renderCard("NEW CUSTOMERS", stats?.newCustomers?.count ?? 0, stats?.newCustomers?.percent_change ?? 0)}
+        {renderCard("OPEN TICKETS", stats?.openTickets?.count ?? 0, stats?.openTickets?.percent_change ?? 0)}
+        {renderCard("SUB-ADMINS", stats?.subAdmins?.count ?? 0, stats?.subAdmins?.percent_change ?? 0)}
       </div>
 
-
       <div>
-        <RevenueChart data={revenueData} />
+        {revenueData && <RevenueChart data={revenueData} />}
         <div className="mt-6 flex space-x-6 justify-between w-full">
-          <CustomerActivityChart data={activityData} />
-          <CustomerLocationsDashboard data={locationData} />
+          {activityData && <CustomerActivityChart data={activityData} />}
+          {locationData && <CustomerLocationsDashboard data={locationData} />}
         </div>
       </div>
     </div>

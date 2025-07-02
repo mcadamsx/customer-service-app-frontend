@@ -10,10 +10,9 @@ import {
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 
-// Define data structure
 export interface ActivityDataEntry {
-  name: string;       // e.g., "Jan"
-  activity: number;   // activity value per month
+  name: string;
+  activity: number;
 }
 
 interface Props {
