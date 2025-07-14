@@ -1,54 +1,50 @@
 import { useEffect, useState } from "react";
 import { FaArrowDown, FaArrowUp } from "react-icons/fa";
 import { FaArrowRightLong } from "react-icons/fa6";
-import RevenueChart from "../../components/common/RevenueChart.tsx";
-import CustomerActivityChart from "../../components/common/CustomerActivityChart.tsx";
-import CustomerLocationsDashboard from "../../components/common/CustomerLocationChart.tsx";
+import RevenueChart, { type RevenueChartEntry } from '../../components/common/RevenueChart.tsx';
+import CustomerActivityChart, { type ActivityDataEntry } from '../../components/common/CustomerActivityChart.tsx';
+import CustomerLocationsDashboard, {
+  type CustomerLocationData,
+} from '../../components/common/CustomerLocationChart.tsx';
+
 import {
   type DashboardStats,
-  type RevenueData,
-  type ActivityData,
-  type LocationData,
-  fetchCustomerActivity,
-  fetchCustomerLocations,
-  fetchDashboardStats,
-  fetchRevenueData,
-} from "../../api/dashboard.ts";
+  fetchUnifiedDashboardData, mapUnifiedDashboard,
+} from '../../api/dashboard.ts';
 
 const AdminDashboard = () => {
   const companyName = localStorage.getItem("company_name") ?? "Admin";
 
   const [stats, setStats] = useState<DashboardStats | null>(null);
-  const [revenueData, setRevenueData] = useState<RevenueData | null>(null);
-  const [activityData, setActivityData] = useState<ActivityData | null>(null);
-  const [locationData, setLocationData] = useState<LocationData | null>(null);
+  const [activityData, setActivityData] = useState<ActivityDataEntry[]>([]);
+  const [locationData, setLocationData] = useState<CustomerLocationData[]>([]);
+  const [revenueChart, setRevenueChart] = useState<RevenueChartEntry[]>([]);
 
   useEffect(() => {
     const loadData = async () => {
       try {
-        const [statsRes, revenueRes, activityRes, locationRes] = await Promise.all([
-          fetchDashboardStats(),
-          fetchRevenueData(),
-          fetchCustomerActivity(),
-          fetchCustomerLocations(),
-        ]);
+        const year = new Date().getFullYear();
+        const raw = await fetchUnifiedDashboardData(year);
+        const { dashboardStats, activityData, locationData, revenueChart } = mapUnifiedDashboard(raw);
 
-        setStats(statsRes);
-        setRevenueData(revenueRes);
-        setActivityData(activityRes);
-        setLocationData(locationRes);
+        setStats(dashboardStats);
+        setActivityData(activityData);
+        setLocationData(locationData);
+        setRevenueChart(revenueChart);
 
-        console.log("Stats:", statsRes);
-        console.log("Revenue:", revenueRes);
-        console.log("Activity:", activityRes);
-        console.log("Locations:", locationRes);
+        console.log("Unified Stats:", dashboardStats);
+        console.log("Revenue Chart:", revenueChart);
+        console.log("Activity:", activityData);
+        console.log("Locations:", locationData);
       } catch (error) {
         console.error("Failed to fetch dashboard data", error);
       }
     };
 
-    loadData();
+
+    void loadData();
   }, []);
+
 
   const renderCard = (title: string, count: number, change: number) => {
     const isPositive = change >= 0;
@@ -93,7 +89,7 @@ const AdminDashboard = () => {
       </div>
 
       <div>
-        {revenueData && <RevenueChart data={revenueData} />}
+        {revenueChart && <RevenueChart data={revenueChart} />}
         <div className="mt-6 flex space-x-6 justify-between w-full">
           {activityData && <CustomerActivityChart data={activityData} />}
           {locationData && <CustomerLocationsDashboard data={locationData} />}

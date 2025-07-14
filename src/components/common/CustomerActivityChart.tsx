@@ -25,6 +25,8 @@ const CustomerActivityChart = ({ data }: Props) => {
 
   const years = ['2024', '2023', '2022', '2021'];
 
+  const hasData = data.some(entry => entry.activity > 0);
+
   return (
     <div className="bg-white p-4 rounded-xl shadow-md w-full">
       <div className="flex justify-between items-center mb-6">
@@ -56,19 +58,25 @@ const CustomerActivityChart = ({ data }: Props) => {
         </div>
       </div>
 
-      <ResponsiveContainer width="100%" height={300}>
-        <BarChart data={data} barSize={24} margin={{ top: 10, right: 30, left: 0, bottom: 30 }}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
-          <YAxis
-            domain={[0, 80000]}
-            ticks={[0, 20000, 40000, 60000, 80000]}
-            tickFormatter={(value) => `${value / 1000}k`}
-          />
-          <Tooltip formatter={(value: number) => `${value.toLocaleString()} units`} />
-          <Bar dataKey="activity" fill="#9333EA" radius={[8, 8, 0, 0]} />
-        </BarChart>
-      </ResponsiveContainer>
+      {hasData ? (
+        <ResponsiveContainer width="100%" height={300}>
+          <BarChart data={data} barSize={24} margin={{ top: 10, right: 30, left: 0, bottom: 30 }}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" />
+            <YAxis
+              domain={[0, 'dataMax + 2']}
+              allowDecimals={false}
+              tickFormatter={(value) => value.toString()}
+            />
+            <Tooltip formatter={(value: number) => `${value} activity`} />
+            <Bar dataKey="activity" fill="#9333EA" radius={[8, 8, 0, 0]} />
+          </BarChart>
+        </ResponsiveContainer>
+      ) : (
+        <div className="text-center text-gray-500 py-10">
+          No customer activity data available for this year.
+        </div>
+      )}
     </div>
   );
 };
