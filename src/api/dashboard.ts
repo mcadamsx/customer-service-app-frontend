@@ -34,23 +34,6 @@ export interface DashboardStats {
   openTickets: StatItem;
   subAdmins: StatItem;
 }
-
-export interface ActivityData {
-  labels: string[];
-  data: number[];
-}
-
-export interface CustomerLocation {
-  city: string;
-  count: number;
-}
-
-export interface LocationData {
-  locations: CustomerLocation[];
-}
-
-
-
 const authHeaders = () => {
   const token = localStorage.getItem("access_token");
   return {
@@ -79,12 +62,12 @@ export const mapUnifiedDashboard = (data: UnifiedDashboardResponse) => {
   }));
 
 
-  const COLORS = ['#6B46C1', '#8B5CF6', '#A78BFA', '#C4B5FD']; // add more if needed
+  const COLORS = ['#6B46C1', '#8B5CF6', '#A78BFA', '#C4B5FD'];
 
   const locationData: CustomerLocationData[] = data.top_locations.map((item, index) => ({
     name: item.country,
     value: item.percentage,
-    customers: Math.round(item.percentage * 100), // simulate number of customers (or get actual number from backend if available)
+    customers: Math.round(item.percentage * 100),
     color: COLORS[index % COLORS.length],
   }));
 

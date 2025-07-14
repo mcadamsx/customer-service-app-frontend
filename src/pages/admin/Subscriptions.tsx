@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { FaArrowDown, FaPlusCircle, FaSort } from 'react-icons/fa';
-import { DatePicker, Dropdown } from 'antd';
+import { FaArrowDown, FaPlusCircle } from 'react-icons/fa';
+import { DatePicker } from 'antd';
 import type { MenuProps } from 'antd';
 import dayjs from 'dayjs';
 import CustomTable from "../../components/common/Table.tsx";
@@ -10,6 +10,7 @@ import CustomModal from '../../components/common/Modal.tsx';
 import SearchableSelect from '../../components/common/Select.tsx';
 import { africanCountryOptions, ghanaRegionOptions } from '../../utils/Options.ts';
 import type { ColumnsType } from 'antd/es/table';
+import { ProductHeader } from '../../components/common/ProductHeader.tsx';
 
 interface ServiceEntry {
   key: string;
@@ -137,17 +138,7 @@ const Subscriptions: React.FC = () => {
 
   const ProductsColumn = [
     {
-      title: () => (
-        <div className="flex items-center gap-2">
-          <span>Product</span>
-          <Dropdown
-            trigger={['click']}
-            menu={{ items: productSortOptions, onClick: handleSortClick }}
-          >
-            <FaSort className="cursor-pointer text-gray-600 hover:text-black" />
-          </Dropdown>
-        </div>
-      ),
+      title: <ProductHeader onSortClick={handleSortClick} sortOptions={productSortOptions} />,
       dataIndex: "name",
     },
     { title: "No. of Services", dataIndex: "serviceCount" },
@@ -258,23 +249,35 @@ const Subscriptions: React.FC = () => {
                 <SearchableSelect label="Type of Product" name="region" options={ghanaRegionOptions} value={formData.region} onChange={(value) => setFormData({ ...formData, region: value })} required />
                 <Input name="vat" label="VAT" placeholder="Optional" />
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Date Created</label>
+                  <label htmlFor="date-created" className="block text-sm font-medium text-gray-700 mb-1">
+                    Date Created
+                  </label>
                   <DatePicker
+                    id="date-created"
                     className="w-full"
                     value={formData.dateCreated ? dayjs(formData.dateCreated) : null}
-                    onChange={(_, dateString) => setFormData({ ...formData, dateCreated: dateString as string })}
+                    onChange={(_, dateString) =>
+                      setFormData({ ...formData, dateCreated: dateString as string })
+                    }
                     format="YYYY-MM-DD"
                   />
                 </div>
+
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Expiry Date</label>
+                  <label htmlFor="expiry-date" className="block text-sm font-medium text-gray-700 mb-1">
+                    Expiry Date
+                  </label>
                   <DatePicker
+                    id="expiry-date"
                     className="w-full"
                     value={formData.expireDate ? dayjs(formData.expireDate) : null}
-                    onChange={(_, dateString) => setFormData({ ...formData, expireDate: dateString as string })}
+                    onChange={(_, dateString) =>
+                      setFormData({ ...formData, expireDate: dateString as string })
+                    }
                     format="YYYY-MM-DD"
                   />
                 </div>
+
               </div>
               <span className="flex justify-center text-sky-700 gap-1">
                 <FaPlusCircle className="mt-1" />

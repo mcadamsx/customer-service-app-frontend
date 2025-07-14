@@ -20,7 +20,7 @@ function CustomTable<T extends object>({
                                          rowKey,
                                          title,
                                          selectable = false,
-                                       }: CustomTableProps<T>) {
+                                       }: Readonly<CustomTableProps<T>>) {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {

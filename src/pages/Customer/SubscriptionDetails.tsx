@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import { FaChevronRight, FaPlusCircle } from 'react-icons/fa';
 import Button from '../../components/common/Button.tsx';
@@ -32,13 +32,12 @@ const SubscriptionDetails = () => {
     description: '',
   });
 
-  const navigate = useNavigate();
   const { id } = useParams();
   const Admin = localStorage.getItem('company_name') ?? 'John Doe';
 
   useEffect(() => {
     const subscription = demoData.find((item) => item.key === id);
-    setDescription(subscription?.description || 'No description available.');
+    setDescription(subscription?.description ?? 'No description available.');
   }, [id]);
 
   const handleInputChange =
@@ -88,12 +87,10 @@ const SubscriptionDetails = () => {
       <div className="mx-auto">
         <div className="flex justify-between items-center text-sm text-gray-600 mb-4">
           <div className="flex gap-2">
-            <span
-              className="text-purple-700 text-xl hover:underline cursor-pointer"
-              onClick={() => navigate('/customer-subscriptions')}
-            >
+            <Link to="/customer-subscriptions"
+              className="text-purple-700 text-xl hover:underline cursor-pointer">
               Subscriptions
-            </span>
+            </Link>
             <span className="mt-2">
               <FaChevronRight />
             </span>
@@ -119,7 +116,7 @@ const SubscriptionDetails = () => {
             <p className="text-sm text-gray-600">Created by</p>
             <div className="flex items-center gap-3">
               <img
-                src="/path-to-profile.jpg" // Replace with actual path
+                src=""
                 alt="Admin profile"
                 className="w-10 h-10 rounded-full object-cover"
               />
@@ -146,11 +143,16 @@ const SubscriptionDetails = () => {
             onChange={handleInputChange('product')}
             required
           />
+
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="dateIssued"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Date Issued
             </label>
             <DatePicker
+              id="dateIssued"
               className="w-full"
               value={formData.dateIssued}
               onChange={handleDateChange('dateIssued')}
@@ -158,11 +160,16 @@ const SubscriptionDetails = () => {
               placeholder="Select date issued"
             />
           </div>
+
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="expireDate"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Expire Date
             </label>
             <DatePicker
+              id="expireDate"
               className="w-full"
               value={formData.expireDate}
               onChange={handleDateChange('expireDate')}
@@ -170,6 +177,7 @@ const SubscriptionDetails = () => {
               placeholder="Select expire date"
             />
           </div>
+
           <Input
             name="service"
             label="Service"

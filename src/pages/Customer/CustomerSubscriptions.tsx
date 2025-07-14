@@ -290,10 +290,11 @@ const CustomerSubscriptions: React.FC = () => {
             required
           />
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="dateIssued" className="block text-sm font-medium text-gray-700 mb-1">
               Date Issued
             </label>
             <DatePicker
+              id="dateIssued"
               className="w-full"
               value={formData.dateIssued ? dayjs(formData.dateIssued) : null}
               onChange={handleDateChange('dateIssued')}
@@ -301,6 +302,7 @@ const CustomerSubscriptions: React.FC = () => {
               placeholder="Select date issued"
             />
           </div>
+
           <Input
             name="service"
             label="Service"
