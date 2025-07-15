@@ -6,19 +6,21 @@ const { Title } = Typography;
 
 type TableRowSelection<T> = TableProps<T>["rowSelection"];
 
-interface CustomTableProps<T> {
+interface CustomTableProps<T extends object> {
   columns: TableColumnsType<T>;
   dataSource: T[];
   rowKey: keyof T;
   title?: string;
+  selectable?: boolean;
 }
 
-function CustomTable<T extends Record<string, unknown>>({
-                                                          columns,
-                                                          dataSource,
-                                                          rowKey,
-                                                          title,
-                                                        }: CustomTableProps<T>) {
+function CustomTable<T extends object>({
+                                         columns,
+                                         dataSource,
+                                         rowKey,
+                                         title,
+                                         selectable = false,
+                                       }: Readonly<CustomTableProps<T>>) {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
@@ -33,15 +35,15 @@ function CustomTable<T extends Record<string, unknown>>({
   const hasSelected = selectedRowKeys.length > 0;
 
   return (
-    <Flex gap="middle" vertical className="p-4 rounded-md shadow-md ">
+    <Flex gap="middle" vertical className="p-4 rounded-md shadow-md">
       {title && (
-        <Title level={4} className=" !text-gray-800 bg-white p-4 rounded">
+        <Title level={4} className="!text-gray-800 bg-white p-4 rounded">
           {title}
         </Title>
       )}
 
       <Flex align="center" justify="space-between">
-        {hasSelected ? (
+        {hasSelected && selectable ? (
           <span className="text-sm text-gray-600">
             Selected {selectedRowKeys.length} items
           </span>
@@ -52,12 +54,11 @@ function CustomTable<T extends Record<string, unknown>>({
 
       <Table<T>
         rowKey={rowKey as string}
-        rowSelection={rowSelection}
+        rowSelection={selectable ? rowSelection : undefined}
         columns={columns}
         dataSource={dataSource}
-        pagination={{
-          position: ["bottomCenter"],
-        }}
+        pagination={{ position: ["bottomCenter"] }}
+        locale={{ emptyText: "No records found." }}
       />
     </Flex>
   );

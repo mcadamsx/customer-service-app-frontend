@@ -17,6 +17,7 @@ export const adminRoutes = [
 
 export const customerRoutes =  [
   {name: "Dashboard", path: "/customer-dashboard", icon: MdDashboard},
+  {name: "Subscriptions", path: "/customer-subscriptions", icon: FaStar },
 ]
 
 

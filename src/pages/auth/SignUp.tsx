@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
-
 import ProgressBar from "../../components/common/ProgressBar";
 import Button from "../../components/common/Button";
 import StepOne from "../../components/auth/SignUpForms/StepOne.tsx";
@@ -10,7 +9,7 @@ import StepThree from "../../components/auth/SignUpForms/StepThree.tsx";
 import LoginLeftPanel from "../../components/auth/LeftPanel.tsx";
 import AuthLayout from "../../layouts/AuthLayout.tsx";
 import Toast from "../../components/common/ToastMessage.tsx";
-import { registerCustomer } from '../../api/auth.ts';
+import { registerCustomer , registerAdmin } from '../../api/auth.ts';
 
 interface FormData {
   Token: string;
@@ -138,9 +137,18 @@ const SignUp = () => {
     };
 
     try {
-      const response = await registerCustomer(payload);
-      console.log("Registration success:", response);
+      const tokenPrefix = formData.Token.slice(0, 3).toUpperCase();
 
+      let response;
+      if (tokenPrefix === "ADM") {
+        response = await registerAdmin(payload);
+      } else if (tokenPrefix === "CUS") {
+        response = await registerCustomer(payload);
+      } else {
+        throw new Error("Invalid token prefix. Please contact support.");
+      }
+
+      console.log("Registration success:", response);
       setIsSubmitted(true);
       setStep(3);
       Toast.success("Account created successfully!");
@@ -157,7 +165,6 @@ const SignUp = () => {
             };
           };
         };
-
         message = err.response?.data?.message ?? message;
       }
 
@@ -165,7 +172,7 @@ const SignUp = () => {
     } finally {
       setIsSubmitting(false);
     }
-  };
+  }
 
   const renderStep = () => {
     if (isSubmitted && step === 3) return <StepThree />;
@@ -245,5 +252,5 @@ const SignUp = () => {
     />
   );
 };
+  export default SignUp;
 
-export default SignUp;

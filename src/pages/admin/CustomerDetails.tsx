@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { FaEnvelope } from 'react-icons/fa';
+import { FaChevronRight, FaEnvelope } from 'react-icons/fa';
 import Button from "../../components/common/Button.tsx";
 import CustomTable from '../../components/common/Table.tsx';
 
@@ -13,6 +13,7 @@ const mockCustomers = [
     service: "Premium Support",
     datePurchased: "2024-10-01",
     status: "Verified",
+    company: "TechFlow Ltd"
   },
 ];
 
@@ -91,6 +92,7 @@ const CustomerDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const customer = mockCustomers.find((c) => c.key === id);
   const [activeTab, setActiveTab] = useState<'subscriptions' | 'issues'>('subscriptions');
+  const [loading, setLoading] = useState(false);
 
   if (!customer) {
     return <div className="p-4 text-red-600">Customer not found.</div>;
@@ -102,20 +104,54 @@ const CustomerDetails: React.FC = () => {
     .join('')
     .toUpperCase();
 
+  const handleInvite = async () => {
+    setLoading(true);
+    const accessToken = localStorage.getItem('access_token');
+    try {
+      const response = await fetch('https://380fe478520e.ngrok-free.app/api/admin/invite-customer/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          authorization: 'Bearer ' + accessToken,
+        },
+        body: JSON.stringify({
+          full_name: "Kingsley Doe",
+          email: "Kingsley@example.com",
+          phone: "+1234567890",
+          company_name: "Qliq"
+        }),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        alert("Customer invitation sent successfully!");
+        console.log("Response:", data);
+      } else {
+        console.error("Error:", data);
+        alert("Failed to invite customer.");
+      }
+    } catch (error) {
+      console.error("Request failed:", error);
+      alert("Something went wrong.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="p-6 space-y-6">
       <div className="flex justify-between items-center">
-        <nav className="text-sm text-gray-500 space-x-2">
+        <nav className="text-sm text-gray-500 flex space-x-2">
           <Link to="/Customers" className="text-purple-700 font-medium hover:underline">
             Customers
           </Link>
-          <span>&gt;</span>
+          <span className="mt-1"><FaChevronRight /></span>
           <span>Customer Details</span>
         </nav>
-        <Button variant="primary">
+        <Button variant="primary" onClick={handleInvite} disabled={loading}>
           <span className="flex gap-2">
             <FaEnvelope className="mt-1" />
-            Reinvite Customer
+            {loading ? "Sending..." : "Reinvite Customer"}
           </span>
         </Button>
       </div>
