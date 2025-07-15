@@ -32,15 +32,10 @@ const AdminDashboard = () => {
         setLocationData(locationData);
         setRevenueChart(revenueChart);
 
-        console.log("Unified Stats:", dashboardStats);
-        console.log("Revenue Chart:", revenueChart);
-        console.log("Activity:", activityData);
-        console.log("Locations:", locationData);
       } catch (error) {
         console.error("Failed to fetch dashboard data", error);
       }
     };
-
 
     void loadData();
   }, []);

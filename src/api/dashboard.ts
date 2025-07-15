@@ -43,9 +43,16 @@ const authHeaders = () => {
   };
 };
 
-export const fetchUnifiedDashboardData = async (year: number): Promise<UnifiedDashboardResponse> => {
-const res = await api.get(`/api/admin/dashboard/?year=${year}`, authHeaders());
-return res.data;
+export const fetchUnifiedDashboardData = async (
+  year: number
+): Promise<UnifiedDashboardResponse> => {
+  try {
+    const res = await api.get(`/api/admin/dashboard/?year=${year}`, authHeaders());
+    return res.data;
+  } catch (error) {
+    console.error("Error fetching unified dashboard data:", error);
+    throw new Error("Failed to fetch unified dashboard data");
+  }
 };
 
 export const mapUnifiedDashboard = (data: UnifiedDashboardResponse) => {
