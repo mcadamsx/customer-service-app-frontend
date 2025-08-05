@@ -78,12 +78,15 @@ export const mapUnifiedDashboard = (data: UnifiedDashboardResponse) => {
     color: COLORS[index % COLORS.length],
   }));
 
+  function getRandomInt(min: number, max: number): number {
+    return Math.floor(Math.random() * (max - min)) + min;
+  }
 
   const revenueChart: RevenueChartEntry[] = data.revenue_chart_data.map((month) => ({
     name: month.name,
-    Tablet: Math.floor(Math.random() * 8000),
-    Internet: Math.floor(Math.random() * 8000),
-    Voice: Math.floor(Math.random() * 8000),
+    Tablet: getRandomInt(1000, 8000),
+    Internet:getRandomInt(1000, 8000),
+    Voice: getRandomInt(1000, 8000),
   }));
 
   return {
