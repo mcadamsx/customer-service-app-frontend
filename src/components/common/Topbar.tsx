@@ -36,7 +36,7 @@ const Topbar: React.FC = () => {
         >
           Logout
         </button>
-      ),
+      )
     },
   ];
 

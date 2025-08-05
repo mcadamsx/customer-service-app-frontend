@@ -1,5 +1,5 @@
-import api from "./client.ts"
 import type { AxiosError } from 'axios';
+import api from './client.ts';
 
 export interface CustomerRegisterPayload {
   token: string;
@@ -23,12 +23,16 @@ export interface CustomerRegisterResponse {
   };
 }
 
-export const registerCustomer = async (
-  payload: CustomerRegisterPayload
-): Promise<CustomerRegisterResponse> => {
+export const registerAdmin = async (payload: CustomerRegisterPayload): Promise<CustomerRegisterResponse> => {
   const response = await api.post("/api/admin/register/", payload);
   return response.data;
 };
+
+export const registerCustomer = async (payload: CustomerRegisterPayload): Promise<CustomerRegisterResponse> => {
+  const response = await api.post("/api/customer/register/", payload);
+  return response.data;
+};
+
 
 
 export interface LoginPayload {
