@@ -79,7 +79,10 @@ export const mapUnifiedDashboard = (data: UnifiedDashboardResponse) => {
   }));
 
   function getRandomInt(min: number, max: number): number {
-    return Math.floor(Math.random() * (max - min)) + min;
+    const buffer = new Uint32Array(1);
+    crypto.getRandomValues(buffer);
+    const randomValue = buffer[0] / (0xffffffff + 1);
+    return Math.floor(randomValue * (max - min + 1)) + min;
   }
 
   const revenueChart: RevenueChartEntry[] = data.revenue_chart_data.map((month) => ({
